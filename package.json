@@ -11,7 +11,8 @@
   "dependencies": {
     "lodash": "^4.17.4",
     "vue": "^2.2.2",
-    "vue-router": "^2.2.0"
+    "vue-router": "^2.2.0",
+    "vuex": "^2.2.1"
   },
   "devDependencies": {
     "node-sass": "^4.5.0",

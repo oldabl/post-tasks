@@ -1,12 +1,20 @@
 <template>
   <div class="drop-area">
-    <div class="dropZone" v-bind:class="{highlightDrop: dragOver}" @dragleave="dragOver = false" @dragover="dragOver = true" @dragover.prevent @drop="drop">
+    <div class="drop-zone"
+      v-if="isTaskBeingDragged"
+      v-bind:class="{highlightDrop: dragOver}"
+      @dragleave="dragOver = false"
+      @dragover="dragOver = true"
+      @dragover.prevent
+      @drop="drop">
         Drop here
     </div>
   </div>
 </template>
 
 <script>
+import {mapGetters} from 'vuex';
+
 export default {
   name:'drop-area',
   props: [
@@ -23,6 +31,11 @@ export default {
       console.log(this.categoryid);
       this.dragOver = false;
     },
+  },
+  computed: {
+    ...mapGetters([
+      'isTaskBeingDragged'
+    ])
   }
 }
 </script>
@@ -30,11 +43,13 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss" scoped>
 .drop-area {
-  min-height:20px;
   background-color: gray;
 
   .drop-zone {
     min-height: 10px;
+    margin:auto;
+    padding:auto;
+    display:block;
   }
 
   .highlightDrop {
