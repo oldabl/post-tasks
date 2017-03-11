@@ -1,5 +1,5 @@
 <template>
-  <div class="task">
+  <div class="task" draggable="true">
     {{task}}
   </div>
 </template>

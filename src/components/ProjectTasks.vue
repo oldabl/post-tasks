@@ -1,53 +1,53 @@
 <template>
-  <div class="project-tasks">
-    <div class="category">
-      <div class="drop-area" v-bind:class="{display}" @dragleave="display = false" @dragover="display = true" @dragover.prevent @drop="drop">
+  <div class="project">
+    <h1 class="project-title">Project</h1>
+    <div class="categories">
+      <div class="category" v-for="category in categories" :key="category.id">
+        <h2 class="category-title">{{category.name}}</h2>
+        <drop-area :categoryid="category.id"></drop-area>
+        <div class="tasks">
+          <task v-for="task in tasks" :key="task.id" :task="task.description"></task>
+        </div>
       </div>
-      <task draggable="true" v-for="task in todo" :key="task.id" :task="task.description"></task>
-    </div>
-    <div class="category">
-      <div @dragover.prevent @drop="drop">
-        Drop stuff here
-      </div>
-      <task draggable="true" v-for="task in inprogress" :key="task.id" :task="task.description"></task>
-    </div>
-    <div class="category">
-      <div @dragover.prevent @drop="drop">
-        Drop stuff here
-      </div>
-      <task draggable="true" v-for="task in done" :key="task.id" :task="task.description"></task>
     </div>
   </div>
 </template>
 
 <script>
 import Task from './Task.vue';
+import DropArea from './DropArea.vue';
 export default {
+  components: {
+    Task,
+    DropArea
+  },
   data () {
     return {
-      todo: [
-        {'id': 0, 'description': 'Do this'},
-        {'id': 1, 'description': 'Do that'}
+      categories: [
+        {'id': 0, 'name': 'To Do'},
+        {'id': 1, 'name': 'In Progress'},
+        {'id': 2, 'name': 'Done'}
       ],
-      inprogress: [
-        {'id': 2, 'description': 'Shut up'}
+      tasks: [
+        {'id': 0, 'categoryid': 0, 'description': 'Do this'},
+        {'id': 1, 'categoryid': 0, 'description': 'Do that'},
+        {'id': 2, 'categoryid': 1, 'description': 'Shut up'},
+        {'id': 3, 'categoryid': 2, 'description': 'Stop everything'}
       ],
-      done: [
-        {'id': 3, 'description': 'Stop everything'}
-      ],
-      display: false
     }
   },
-  components: {
-    Task
-  },
   methods: {
-    drop: function(ev) {
-      console.log(ev.target);
-      this.display = false;
-    },
     setDisplay() {
       this.display = true;
+    },
+    tasksFromCategory(id) {
+      return _.map(this.tasks, task => {
+        console.log(id);
+        if (task.categoryid === id) {
+          console.log(task);
+          return task;
+        }
+      });
     }
   }
 }
@@ -55,23 +55,13 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss" scoped>
-.project-tasks {
+.project {
   width: 100%;
 
   .category {
     display: block;
     float: left;
-    width: 20%;
-  }
-
-  .drop-area {
-    min-height: 10px;
-  }
-
-  .display {
-    min-height: 30px;
-    background-color: grey;
-    border: 1px solid black;
+    width: 30%;
   }
 }
 </style>
