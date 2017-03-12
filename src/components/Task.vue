@@ -1,5 +1,5 @@
 <template>
-  <div class="task" draggable="true" @dragstart="startDraggingTask({start: true})" @dragend="startDraggingTask({start: false})" v-bind:style="{ backgroundColor: color }">
+  <div class="task" draggable="true" @dragstart="startDraggingTask({taskid: id})" @dragend="startDraggingTask({taskid: null})" v-bind:style="{ backgroundColor: color }">
     {{task}}
   </div>
 </template>
@@ -11,7 +11,8 @@ export default {
   name:'task',
   props: [
     'task',
-    'color'
+    'color',
+    'id'
   ],
   methods: {
     ...mapActions([

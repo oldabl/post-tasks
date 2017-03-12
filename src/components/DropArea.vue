@@ -1,7 +1,7 @@
 <template>
   <div class="drop-area">
     <div class="drop-zone"
-      v-if="isTaskBeingDragged"
+      v-if="taskBeingDragged !== null"
       v-bind:class="{highlightDrop: dragOver}"
       @dragleave="dragOver = false"
       @dragover="dragOver = true"
@@ -13,7 +13,7 @@
 </template>
 
 <script>
-import {mapGetters} from 'vuex';
+import {mapGetters, mapActions} from 'vuex';
 
 export default {
   name:'drop-area',
@@ -27,14 +27,18 @@ export default {
   },
   methods: {
     drop: function(ev) {
-      console.log(ev.target);
-      console.log(this.categoryid);
       this.dragOver = false;
+      var taskid = this.taskBeingDragged;
+      var categoryid = this.categoryid;
+      this.changeTaskCategory({taskid, categoryid});
     },
+    ...mapActions([
+      'changeTaskCategory'
+    ])
   },
   computed: {
     ...mapGetters([
-      'isTaskBeingDragged'
+      'taskBeingDragged'
     ])
   }
 }
