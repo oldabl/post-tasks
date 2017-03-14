@@ -1,2 +1,5 @@
 export const START_DRAGGING_TASK = 'startDraggingTask'
 export const CHANGE_TASK_CATEGORY = 'changeTaskCategory'
+export const CHANGE_TASK_POSITION = 'changeTaskPosition'
+export const START_DRAGGING_CATEGORY = 'startDraggingCategory'
+export const CHANGE_CATEGORY_POSITION = 'changeCategoryPosition'

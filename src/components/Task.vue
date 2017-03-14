@@ -1,6 +1,6 @@
 <template>
   <div class="task" draggable="true" @dragstart="startDraggingTask({taskid: id})" @dragend="startDraggingTask({taskid: null})" v-bind:style="{ backgroundColor: color }">
-    {{task}}
+    <p>{{task}}</p>
   </div>
 </template>
 
@@ -12,7 +12,8 @@ export default {
   props: [
     'task',
     'color',
-    'id'
+    'id',
+    'position'
   ],
   methods: {
     ...mapActions([
@@ -25,9 +26,13 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss" scoped>
 .task {
-  padding: 0.3rem;
-  font-size: 1.2rem;
-  box-shadow: 3px 3px 1px 0px #666;
-  width: 90%;
+  width: 100%;
+  border: 0.1rem solid #ccc;
+  height: 100px;
+  box-shadow: 2px 2px 2px #888888;
+
+  p {
+    padding: 0 0.4rem;
+  }
 }
 </style>

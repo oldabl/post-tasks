@@ -7,7 +7,7 @@
       @dragover="dragOver = true"
       @dragover.prevent
       @drop="drop">
-        Drop here
+        <p>Drop here</p>
     </div>
   </div>
 </template>
@@ -47,19 +47,25 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss" scoped>
 .drop-area {
-  background-color: gray;
+  background-color: white;
+  width: 100%;
 
   .drop-zone {
     min-height: 10px;
     margin:auto;
     padding:auto;
     display:block;
+    margin: auto;
+    min-height: 25px;
+
+    p {
+      width: 50%;
+      margin:auto;
+    }
   }
 
   .highlightDrop {
-    min-height: 30px;
-    background-color: grey;
-    border: 1px solid black;
+    background-color: blue;
   }
 }
 </style>

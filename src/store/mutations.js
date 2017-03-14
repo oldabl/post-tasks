@@ -11,8 +11,37 @@ export default {
     _.map(state.tasks, task => {
       if (task.id == taskid) {
         task.categoryid = categoryid;
+        task.position = 0;
+      } else {
+        task.position++;
       }
       return task;
     });
+    state.taskBeingDragged = null;
+  },
+  [types.CHANGE_TASK_POSITION] (state, {taskid, oldtaskposition, newtaskposition}) {
+    _.map(state.tasks, task => {
+      if (task.id == taskid) {
+        task.position = newtaskposition;
+      }
+      if (task.position == newtaskposition) {
+        task.position = oldtaskposition;
+      }
+      return task;
+    });
+  },
+  [types.START_DRAGGING_CATEGORY] (state, {categoryid}) {
+    state.categoryBeingDragged = categoryid;
+  },
+  [types.CHANGE_CATEGORY_POSITION] (state, {categoryid, oldcategoryposition, newcategoryposition}) {
+    _.map(state.categories, category => {
+      if (category.id == categoryid) {
+        category.position = newcategoryposition;
+      } else if (category.position == newcategoryposition) {
+        category.position = oldcategoryposition;
+      }
+      return category;
+    });
+    state.categoryBeingDragged = null;
   }
 }
