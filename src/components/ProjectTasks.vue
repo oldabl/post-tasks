@@ -12,13 +12,11 @@
 <script>
 import {mapGetters} from 'vuex';
 
-import DropArea from './DropArea.vue';
 import Category from './Category.vue';
 
 export default {
   components: {
-    Category,
-    DropArea
+    Category
   },
   computed: {
     ...mapGetters([
@@ -27,7 +25,6 @@ export default {
   },
   methods: {
     categoriesFromProjectSorted(withArchived) {
-      var hello;
       return _.sortBy(this.categories, function(category) {
         return category.position;
       });

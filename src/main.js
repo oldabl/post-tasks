@@ -6,6 +6,9 @@ import router from './router'
 import store from './store'
 let _ = require('lodash');
 
+import VueDraggable from 'vue-draggable'
+Vue.use(VueDraggable)
+
 Vue.config.productionTip = false
 
 /* eslint-disable no-new */

@@ -5,7 +5,7 @@
     </h2>
     <div class="tasks">
       <div class="task" v-for="task in tasksFromCategorySorted(id)" :key="task.id">
-        <task :task="task.description" :color="task.color" :id="task.id" :position="task.position"></task>
+        <task :task="task.description" :color="task.color" :id="task.id" :position="task.position" :categoryid="id"></task>
       </div>
     </div>
   </div>
@@ -15,12 +15,10 @@
 import {mapGetters, mapActions} from 'vuex';
 
 import Task from './Task.vue';
-import DropArea from './DropArea.vue';
 
 export default {
   components: {
-    Task,
-    DropArea
+    Task
   },
   props: [
     'name',
@@ -39,11 +37,7 @@ export default {
       });
     },
     drop(ev) {
-      if(this.taskBeingDragged != undefined || this.taskBeingDragged != null) {
-        var taskid = this.taskBeingDragged;
-        var categoryid = this.id;
-        this.changeTaskCategory({taskid, categoryid});
-      } else if(this.categoryBeingDragged != undefined || this.categoryBeingDragged != null) {
+      if(this.categoryBeingDragged != undefined || this.categoryBeingDragged != null) {
         var categoryid = this.categoryBeingDragged;
         var oldcategoryposition = null;
         _.map(this.categories, category => {
