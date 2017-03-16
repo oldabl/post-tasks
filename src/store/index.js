@@ -10,6 +10,7 @@ const store = new Vuex.Store({
   state: {
     taskBeingDragged: null,
     categoryBeingDragged: null,
+    activeDropZone: {'categoryid': null, 'position': null},
     categories: [
         {'id': 0, 'name': 'To Do', 'position': 0, 'archived': false},
         {'id': 1, 'name': 'In Progress', 'position': 1, 'archived': false},

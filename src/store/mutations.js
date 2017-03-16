@@ -43,5 +43,8 @@ export default {
       return category;
     });
     state.categoryBeingDragged = null;
+  },
+  [types.CHANGE_DROPZONE_COORDINATES] (state, {categoryid, position}) {
+    state.activeDropZone = {'categoryid': categoryid, 'position': position};
   }
 }

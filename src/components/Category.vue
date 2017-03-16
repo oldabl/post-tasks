@@ -1,6 +1,6 @@
 <template>
-  <div class="category" @dragover.prevent @drop="drop">
-    <h2 class="category-title" draggable="true" @dragstart="startDraggingCategory({categoryid: id})" @dragend="startDraggingCategory({categoryid: null})" >
+  <div class="category" :class="{blurCategory}" @dragover.prevent="dragOver()" @dragleave="dragLeave()" @drop="drop">
+    <h2 class="category-title" draggable="true" @dragstart="dragStart()" @dragend="dragEnd()" >
         {{name}}
     </h2>
     <div class="tasks">
@@ -25,6 +25,11 @@ export default {
     'id',
     'position'
   ],
+  data() {
+    return {
+      blurCategory: false
+    }
+  },
   methods: {
     tasksFromCategorySorted(categoryid) {
       var tasksFromCategory = _.filter(this.tasks, function(task) {
@@ -36,7 +41,21 @@ export default {
         return task.position;
       });
     },
+    dragOver() {
+      this.blurCategory = (this.categoryBeingDragged != null && this.categoryBeingDragged != this.id);
+    },
+    dragLeave() {
+      this.blurCategory = false;
+    },
+    dragStart() {
+      var id = this.id;
+      this.startDraggingCategory({categoryid: id});
+    },
+    dragEnd() {
+      this.startDraggingCategory({categoryid: null});
+    },
     drop(ev) {
+      this.blurCategory = false;
       if(this.categoryBeingDragged != undefined || this.categoryBeingDragged != null) {
         var categoryid = this.categoryBeingDragged;
         var oldcategoryposition = null;
@@ -97,5 +116,9 @@ export default {
       margin: 0.5rem 0;
     }
   }
+}
+
+.blurCategory {
+  opacity: 0.4;
 }
 </style>

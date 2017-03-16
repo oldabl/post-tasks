@@ -20,3 +20,7 @@ export const startDraggingCategory = ({commit}, {categoryid}) => {
 export const changeCategoryPosition = ({commit}, {categoryid, oldcategoryposition, newcategoryposition}) => {
   commit(types.CHANGE_CATEGORY_POSITION, {categoryid, oldcategoryposition, newcategoryposition});
 }
+
+export const changeDropZoneCoordinates = ({commit}, {categoryid, position}) => {
+  commit(types.CHANGE_DROPZONE_COORDINATES, {categoryid, position});
+}
