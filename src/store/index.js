@@ -8,6 +8,7 @@ Vue.use(Vuex);
 
 const store = new Vuex.Store({
   state: {
+    newTaskProcessStartedForCategory: null,
     taskBeingDragged: null,
     categoryBeingDragged: null,
     activeDropZone: {'categoryid': null, 'position': null},
@@ -18,7 +19,7 @@ const store = new Vuex.Store({
     ],
     tasks: [
         {'id': 0, 'categoryid': 0, 'description': 'Do this', color:'yellow', 'position': 0},
-        {'id': 1, 'categoryid': 1, 'description': 'Do that', color:'blue', 'position': 0},
+        {'id': 1, 'categoryid': 0, 'description': 'Do that', color:'blue', 'position': 1},
         {'id': 2, 'categoryid': 2, 'description': 'Shut up', color:'pink', 'position': 0}
     ]
   },

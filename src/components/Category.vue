@@ -7,6 +7,19 @@
       <div class="task" v-for="task in tasksFromCategorySorted(id)" :key="task.id">
         <task :task="task.description" :color="task.color" :id="task.id" :position="task.position" :categoryid="id"></task>
       </div>
+      <task-drop-zone :categoryid="id" :position="this.tasksFromCategorySorted(id).length" class="drop-zone"></task-drop-zone>
+      <div v-if="taskBeingDragged == null" class="new-task">
+        <div v-if="!creatingNewTask">
+          <button type="button" @click="newTask(id)">+ New task</button>
+        </div>
+        <div v-else>
+          <form>
+            <input v-model="taskName" type="text" ref="taskInput" placeholder="Do this, do that" />
+            <button type="submit" :disabled="taskName == null || taskName.length == 0" @click="tryToCreateNewTask()">Create</button>
+            <a @click="stopTaskCreation()" class="cancel-creation-link">Cancel</a>
+          </form>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -15,19 +28,23 @@
 import {mapGetters, mapActions} from 'vuex';
 
 import Task from './Task.vue';
+import TaskDropZone from './TaskDropZone.vue';
 
 export default {
   components: {
-    Task
+    Task,
+    TaskDropZone
   },
   props: [
-    'name',
     'id',
+    'name',
     'position'
   ],
   data() {
     return {
-      blurCategory: false
+      blurCategory: false,
+      creatingNewTask: false,
+      taskName: null
     }
   },
   methods: {
@@ -68,10 +85,29 @@ export default {
         this.changeCategoryPosition({categoryid, oldcategoryposition, newcategoryposition});
       }
     },
+    newTask(categoryid) {
+      this.startNewTaskProcess({categoryid});
+      this.creatingNewTask = true;
+      this.$nextTick(function() {
+        this.$refs.taskInput.focus();
+      });
+    },
+    stopTaskCreation() {
+      this.creatingNewTask = false;
+      this.taskName = null;
+      if(this.newTaskProcessStartedForCategory == this.id)
+        this.startNewTaskProcess({null});
+    },
+    tryToCreateNewTask() {
+      var newTask = {task: this.taskName, categoryid: this.id, position: this.tasksFromCategorySorted(this.id).length};
+      this.createNewTask(newTask);
+      this.stopTaskCreation();
+    },
     ...mapActions([
-      'changeTaskCategory',
       'startDraggingCategory',
-      'changeCategoryPosition'
+      'changeCategoryPosition',
+      'createNewTask',
+      'startNewTaskProcess'
     ])
   },
   computed: {
@@ -79,8 +115,16 @@ export default {
       'tasks',
       'categories',
       'taskBeingDragged',
-      'categoryBeingDragged'
+      'categoryBeingDragged',
+      'newTaskProcessStartedForCategory'
     ])
+  },
+  watch: {
+    newTaskProcessStartedForCategory(newvalue) {
+      if (newvalue != this.id) {
+        this.stopTaskCreation();
+      }
+    }
   }
 }
 </script>
@@ -114,6 +158,32 @@ export default {
       padding: 0;
       background-color: white;
       margin: 0.5rem 0;
+    }
+
+    .drop-zone {
+      height: 100%;
+    }
+
+    .new-task {
+      width: 100%;
+
+      div {
+        width: 100%;
+
+        button {
+          cursor: pointer;
+          background-color: white;
+          border: 1px solid #ccc;
+          text-decoration: bold;
+          margin: 0.2rem 0;
+        }
+
+        .cancel-creation-link {
+          cursor: pointer;
+          font-size: 0.6rem;
+          color: red;
+        }
+      }
     }
   }
 }

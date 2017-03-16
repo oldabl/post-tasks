@@ -1,8 +1,7 @@
 <template>
   <div class="postit">
-    <div @drop="drop" @dragover.prevent="dragOver()" @dragleave="dragLeave()" class="new-task" :class="{showSmallArea, showBigArea}">
-    </div>
-    <div class="task" draggable="true" @dragstart="dragStart()" @dragend="dragEnd()" v-bind:style="{ backgroundColor: color }">
+    <task-drop-zone :categoryid="categoryid" :position="position" class="drop-zone"></task-drop-zone>
+    <div class="task" draggable="true" @dragstart="dragStart(id)" @dragend="dragEnd()" v-bind:style="{ backgroundColor: color }">
       <p>{{task}}</p>
     </div>
   </div>
@@ -11,90 +10,32 @@
 <script>
 import {mapActions, mapGetters} from 'vuex';
 
+import TaskDropZone from './TaskDropZone.vue';
+
 export default {
   name:'task',
   props: [
-    'task',
-    'color',
     'id',
+    'task',
     'position',
+    'color',
     'categoryid'
   ],
-  data() {
-    return {
-      showSmallArea: false,
-      showBigArea: false
-    }
+  components: {
+    TaskDropZone
   },
   methods: {
     ...mapActions([
-      'startDraggingTask',
-      'changeTaskCategory',
-      'changeDropZoneCoordinates'
+      'startDraggingTask'
     ]),
-    dragStart() {
-      var id = this.id;
+    dragStart(id, categoryid, position) {
       // Store id of task being dragged
-      this.startDraggingTask({taskid: id});
+      var task = {'id': this.id, 'categoryid': this.categoryid, 'position': this.position};
+      this.startDraggingTask({task: task});
     },
     dragEnd() {
       // Finished the task drag, notify store
-      this.startDraggingTask({taskid: null});
-      // No coordinates for potential drop zone used
-      this.changeDropZoneCoordinates({categoryid: null, position: null});
-    },
-    dragOver() {
-      if(this.taskBeingDragged != null) {
-        var categoryid = this.categoryid;
-        var position = this.position;
-        // Notify store that drop zone coordinates is here unless already here
-        if (this.activeDropZone.categoryid != this.categoryid || this.activeDropZone.position != position)
-          this.changeDropZoneCoordinates({categoryid: categoryid, position: position});
-      }
-    },
-    dragLeave() {
-      // Notify store that we left this drop zone
-      this.changeDropZoneCoordinates({categoryid: null, position: null});
-    },
-    drop(ev) {
-      // No active drop zone anymore
-      this.changeDropZoneCoordinates({categoryid: null, position: null});
-      if(this.taskBeingDragged != undefined || this.taskBeingDragged != null) {
-        var taskid = this.taskBeingDragged;
-        var categoryid = this.categoryid;
-        this.changeTaskCategory({taskid, categoryid});
-      }
-    }
-  },
-  computed: {
-    ...mapGetters([
-      'taskBeingDragged',
-      'constants',
-      'activeDropZone'
-    ])
-  },
-  watch: {
-    taskBeingDragged(newvalue) {
-      if(newvalue == null) {
-        this.showSmallArea = false;
-        this.showBigArea = false;
-      } else {
-        if(newvalue != this.id)
-          this.showSmallArea = true;
-        else
-          this.showSmallArea = false;
-      }
-    },
-    activeDropZone(newvalue) {
-      if(newvalue == null || (newvalue.categoryid == null && newvalue.position == null)) {
-        this.showSmallArea = (this.taskBeingDragged != null);
-        this.showBigArea = false;
-      } else if (newvalue.categoryid == this.categoryid && newvalue.position == this.position) {
-        this.showBigArea = true;
-      } else {
-        this.showSmallArea = false;
-        this.showBigArea = false;
-      }
+      this.startDraggingTask({task: null});
     }
   }
 }
@@ -117,21 +58,10 @@ export default {
     }
   }
 
-  .new-task {
-    min-height: 0px;
+  .drop-zone {
     width: 100%;
-    margin-bottom: 5px;
-  }
-
-  .showSmallArea {
-    border: 2px dotted #ccc;
-    background-color: #eee;
-    border-radius: 4px;
-    min-height: 25px;
-  }
-
-  .showBigArea {
-    min-height: 100px;
+    margin-top: 0.5rem;
+    display:block;
   }
 }
 </style>
