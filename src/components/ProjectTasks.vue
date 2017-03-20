@@ -37,7 +37,6 @@ export default {
 <style lang="scss" scoped>
 .project {
   width: 100%;
-  height: 100%;
 
   .project-title {
     margin:1rem;

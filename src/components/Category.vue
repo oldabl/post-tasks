@@ -1,5 +1,5 @@
 <template>
-  <div class="category" :class="{blurCategory}" @dragover.prevent="dragOver()" @dragleave="dragLeave()" @drop="drop">
+  <div class="category" :class="{blurCategory}" @dragover.prevent="dragOver()" @dragleave="dragLeave();" @drop="drop">
     <h2 class="category-title" draggable="true" @dragstart="dragStart()" @dragend="dragEnd()" >
         {{name}}
     </h2>
@@ -7,7 +7,9 @@
       <div class="task" v-for="task in tasksFromCategorySorted(id)" :key="task.id">
         <task :task="task.description" :color="task.color" :id="task.id" :position="task.position" :categoryid="id"></task>
       </div>
-      <task-drop-zone :categoryid="id" :position="this.tasksFromCategorySorted(id).length" class="drop-zone"></task-drop-zone>
+      <div class="task">
+        <empty-task :position="tasksFromCategorySorted(id).length" :categoryid="id"></empty-task>
+      </div>
       <div v-if="taskBeingDragged == null" class="new-task">
         <div v-if="!creatingNewTask">
           <button type="button" @click="newTask(id)">+ New task</button>
@@ -28,11 +30,13 @@
 import {mapGetters, mapActions} from 'vuex';
 
 import Task from './Task.vue';
+import EmptyTask from './EmptyTask.vue';
 import TaskDropZone from './TaskDropZone.vue';
 
 export default {
   components: {
     Task,
+    EmptyTask,
     TaskDropZone
   },
   props: [
@@ -73,7 +77,7 @@ export default {
     },
     drop(ev) {
       this.blurCategory = false;
-      if(this.categoryBeingDragged != undefined || this.categoryBeingDragged != null) {
+      if(this.categoryBeingDragged != null) {
         var categoryid = this.categoryBeingDragged;
         var oldcategoryposition = null;
         _.map(this.categories, category => {
@@ -161,7 +165,8 @@ export default {
     }
 
     .drop-zone {
-      height: 100%;
+      height: auto;
+      overflow:hidden;
     }
 
     .new-task {

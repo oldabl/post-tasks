@@ -25,6 +25,6 @@ export const changeCategoryPosition = ({commit}, {categoryid, oldcategorypositio
   commit(types.CHANGE_CATEGORY_POSITION, {categoryid, oldcategoryposition, newcategoryposition});
 }
 
-export const changeActiveDropZone = ({commit}, {categoryid, position}) => {
-  commit(types.CHANGE_ACTIVE_DROPZONE, {categoryid, position});
+export const changeActiveDropZone = ({commit}, {coordinates}) => {
+  commit(types.CHANGE_ACTIVE_DROPZONE, {coordinates});
 }

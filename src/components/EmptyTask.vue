@@ -1,10 +1,9 @@
 <template>
-  <div class="task-area" @dragover="dragOver()" @drop="drop()">
-    <div v-if="dragover && taskBeingDragged != null && taskBeingDragged.id != id && !isTaskNeighbouring()">
+  <div class="task-area" @dragover="dragOver()" @drop="drop()" :class="{showDrop: taskBeingDragged != null}">
+    <div v-if="taskBeingDragged != null">
       <task-drop-zone></task-drop-zone>
     </div>
-    <div class="task" draggable="true" @dragstart="dragStart()" @dragend="dragEnd()" v-bind:style="{ backgroundColor: color }">
-      <p>{{task}}</p>
+    <div class="task">
     </div>
   </div>
 </template>
@@ -12,16 +11,12 @@
 <script>
 import {mapActions, mapGetters} from 'vuex';
 
-//<task-drop-zone :categoryid="categoryid" :position="position" class="drop-zone"></task-drop-zone>
 import TaskDropZone from './TaskDropZone.vue';
 
 export default {
-  name:'task',
+  name:'empty-task',
   props: [
-    'id',
-    'task',
     'position',
-    'color',
     'categoryid'
   ],
   components: {
@@ -40,20 +35,9 @@ export default {
   },
   methods: {
     ...mapActions([
-      'startDraggingTask',
       'changeActiveDropZone',
       'changeTaskPosition'
     ]),
-    dragStart() {
-      // Store id of task being dragged
-      var task = {'id': this.id, 'categoryid': this.categoryid, 'position': this.position};
-      this.startDraggingTask({task: task});
-    },
-    dragEnd() {
-      // Finished the task drag, notify store
-      this.startDraggingTask({task: null});
-      this.changeActiveDropZone({coordinates: null});
-    },
     dragOver() {
       if (!(this.activeDropZone != null && this.activeDropZone.coordinates != null && this.activeDropZone.coordinates.categoryid == this.categoryid && this.activeDropZone.coordinates.position == this.position)) {
         if (this.taskBeingDragged != null && this.taskBeingDragged.id != this.id) {
@@ -61,9 +45,6 @@ export default {
           this.changeActiveDropZone({coordinates});
         }
       }
-    },
-    isTaskNeighbouring() {
-      return this.taskBeingDragged.categoryid == this.categoryid && this.taskBeingDragged.position == this.position - 1;
     },
     drop() {
       if(this.taskBeingDragged != null && this.taskBeingDragged.id != this.id) {
@@ -89,15 +70,14 @@ export default {
 <style lang="scss" scoped>
 .task-area {
   background-color: #ddd;
+  display: none;
 
   .task {
     width: 100%;
-    border: 0.1rem solid #ccc;
-    box-shadow: 2px 2px 2px #888888;
-
-    p {
-      padding: 0 0.4rem;
-    }
   }
+}
+
+.showDrop {
+  display:block;
 }
 </style>
