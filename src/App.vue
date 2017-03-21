@@ -32,6 +32,14 @@ html {
       height: 100%;
       padding: 0;
       margin: 0;
+
+      button {
+        cursor: pointer;
+        background-color: white;
+        border: 1px solid #ccc;
+        text-decoration: bold;
+        font-size: 0.9rem;
+      }
     }
   }
 }

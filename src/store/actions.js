@@ -28,3 +28,11 @@ export const changeCategoryPosition = ({commit}, {categoryid, oldcategorypositio
 export const changeActiveDropZone = ({commit}, {coordinates}) => {
   commit(types.CHANGE_ACTIVE_DROPZONE, {coordinates});
 }
+
+export const startRenamingCategory = ({commit}, {categoryid}) => {
+  commit(types.START_RENAMING_CATEGORY, {categoryid});
+}
+
+export const changeCategoryTitle = ({commit}, {categoryid, newname}) => {
+  commit(types.CHANGE_CATEGORY_TITLE, {categoryid, newname});
+}

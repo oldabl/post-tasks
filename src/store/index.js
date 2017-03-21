@@ -11,6 +11,7 @@ const store = new Vuex.Store({
     newTaskProcessStartedForCategory: null,
     taskBeingDragged: null,
     categoryBeingDragged: null,
+    categoryBeingRenamed: null,
     activeDropZone: null,
     categories: [
         {'id': 0, 'name': 'To Do', 'position': 0, 'archived': false},

@@ -5,6 +5,9 @@
       <div class="category" v-for="category in categoriesFromProjectSorted(false)" :key="category.id">
         <category :name="category.name" :id="category.id" :position="category.position"></category>
       </div>
+      <div class="category">
+        <new-category></new-category>
+      </div>
     </div>
   </div>
 </template>
@@ -13,10 +16,12 @@
 import {mapGetters} from 'vuex';
 
 import Category from './Category.vue';
+import NewCategory from './NewCategory.vue';
 
 export default {
   components: {
-    Category
+    Category,
+    NewCategory
   },
   computed: {
     ...mapGetters([

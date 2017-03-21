@@ -71,6 +71,13 @@ export default {
     Vue.set(state, 'categoryBeingDragged', null);
   },
   [types.CHANGE_ACTIVE_DROPZONE] (state, {coordinates}) {
-    Vue.set(state, 'activeDropZone', {coordinates});
+    Vue.set(state, 'activeDropZone', coordinates);
+  },
+  [types.START_RENAMING_CATEGORY] (state, {categoryid}) {
+    Vue.set(state, 'categoryBeingRenamed', categoryid);
+  },
+  [types.CHANGE_CATEGORY_TITLE] (state, {categoryid, newname}) {
+    var categoryToChange = _.find(state.categories, {'id': categoryid});
+    categoryToChange.name = newname;
   }
 }

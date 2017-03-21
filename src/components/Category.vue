@@ -1,7 +1,12 @@
 <template>
   <div class="category" :class="{blurCategory}" @dragover.prevent="dragOver()" @dragleave="dragLeave();" @drop="drop">
-    <h2 class="category-title" draggable="true" @dragstart="dragStart()" @dragend="dragEnd()" >
-        {{name}}
+    <h2 class="category-title">
+        <form v-if="enableTitleForm">
+          <input v-model="newCategoryName" type="text" ref="categoryTitleInput" :placeholder="name" />
+          <button type="submit" :disabled="newCategoryName == null || newCategoryName.length == 0" @click="tryToRenameCategory()">Change</button>
+          <a @click="stopRenamingCategory()" class="cancel-creation-link">Cancel</a>
+        </form>
+        <span v-else @click="renameCategory(id)" class="title-click" draggable="true" @dragstart="dragStart()" @dragend="dragEnd()">{{name}}</span>
     </h2>
     <div class="tasks">
       <div class="task" v-for="task in tasksFromCategorySorted(id)" :key="task.id">
@@ -12,7 +17,7 @@
       </div>
       <div v-if="taskBeingDragged == null" class="new-task">
         <div v-if="!creatingNewTask">
-          <button type="button" @click="newTask(id)">+ New task</button>
+          <button type="button" @click="newTask(id)">+ New Task</button>
         </div>
         <div v-else>
           <form>
@@ -48,7 +53,9 @@ export default {
     return {
       blurCategory: false,
       creatingNewTask: false,
-      taskName: null
+      taskName: null,
+      enableTitleForm: false,
+      newCategoryName: null
     }
   },
   methods: {
@@ -107,11 +114,33 @@ export default {
       this.createNewTask(newTask);
       this.stopTaskCreation();
     },
+    renameCategory(categoryid) {
+      this.startRenamingCategory({categoryid});
+      this.newCategoryName = this.name;
+      this.enableTitleForm = true;
+      this.$nextTick(function() {
+        this.$refs.categoryTitleInput.select();
+      });
+    },
+    stopRenamingCategory() {
+      this.enableTitleForm = false;
+      if(this.categoryBeingRenamed == this.id)
+        this.startRenamingCategory({null});
+    },
+    tryToRenameCategory() {
+      var categoryid = this.id;
+      var newname = this.newCategoryName;
+      this.changeCategoryTitle({categoryid, newname});
+      this.stopRenamingCategory();
+    },
     ...mapActions([
-      'startDraggingCategory',
+      'startRenamingCategory',
       'changeCategoryPosition',
       'createNewTask',
-      'startNewTaskProcess'
+      'startNewTaskProcess',
+      'startChangingCategoryTitle',
+      'changeCategoryTitle',
+      'startDraggingCategory'
     ])
   },
   computed: {
@@ -120,7 +149,8 @@ export default {
       'categories',
       'taskBeingDragged',
       'categoryBeingDragged',
-      'newTaskProcessStartedForCategory'
+      'newTaskProcessStartedForCategory',
+      'categoryBeingRenamed'
     ])
   },
   watch: {
@@ -128,7 +158,15 @@ export default {
       if (newvalue != this.id) {
         this.stopTaskCreation();
       }
+    },
+    categoryBeingRenamed(newvalue) {
+      if (newvalue != this.id) {
+        this.stopRenamingCategory();
+      }
     }
+  },
+  created() {
+    this.newCategoryName = this.name;
   }
 }
 </script>
@@ -146,6 +184,15 @@ export default {
     padding: 0.2rem;
     margin: 0.2rem;
     background-color: white;
+
+    .title-click {
+      cursor: pointer;
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
   }
 
   .delete-button {
@@ -174,22 +221,13 @@ export default {
 
       div {
         width: 100%;
-
-        button {
-          cursor: pointer;
-          background-color: white;
-          border: 1px solid #ccc;
-          text-decoration: bold;
-          margin: 0.2rem 0;
-        }
-
-        .cancel-creation-link {
-          cursor: pointer;
-          font-size: 0.6rem;
-          color: red;
-        }
       }
     }
+  }
+  .cancel-creation-link {
+    cursor: pointer;
+    font-size: 0.6rem;
+    color: red;
   }
 }
 

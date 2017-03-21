@@ -39,7 +39,7 @@ export default {
       'changeTaskPosition'
     ]),
     dragOver() {
-      if (!(this.activeDropZone != null && this.activeDropZone.coordinates != null && this.activeDropZone.coordinates.categoryid == this.categoryid && this.activeDropZone.coordinates.position == this.position)) {
+      if (!(this.activeDropZone != null && this.activeDropZone != null && this.activeDropZone.categoryid == this.categoryid && this.activeDropZone.position == this.position)) {
         if (this.taskBeingDragged != null && this.taskBeingDragged.id != this.id) {
           var coordinates = {'categoryid': this.categoryid, 'position': this.position};
           this.changeActiveDropZone({coordinates});
@@ -58,8 +58,8 @@ export default {
   },
   watch: {
     activeDropZone(newvalue) {
-      if (newvalue == null || newvalue.coordinates == null) this.dragover = false;
-      else if (newvalue.coordinates.categoryid != this.categoryid || newvalue.coordinates.position != this.position) this.dragover = false;
+      if (newvalue == null || newvalue == null) this.dragover = false;
+      else if (newvalue.categoryid != this.categoryid || newvalue.position != this.position) this.dragover = false;
       else this.dragover = true;
     }
   }
