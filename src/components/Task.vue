@@ -89,6 +89,7 @@ export default {
 <style lang="scss" scoped>
 .task-area {
   background-color: #ddd;
+  cursor: pointer;
 
   .task {
     width: 100%;

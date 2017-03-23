@@ -5,7 +5,7 @@
       <div class="category" v-for="category in categoriesFromProjectSorted(false)" :key="category.id">
         <category :name="category.name" :id="category.id" :position="category.position"></category>
       </div>
-      <div class="category">
+      <div class="new-category">
         <new-category></new-category>
       </div>
     </div>
@@ -53,6 +53,12 @@ export default {
 
     .category {
       width: 200px;
+      height: 100%;
+      border-radius: 5px;
+      margin: 0 5px;
+    }
+
+    .new-category {
       height: 100%;
       border-radius: 5px;
       margin: 0 5px;

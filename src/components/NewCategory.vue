@@ -14,8 +14,8 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss" scoped>
 .category {
-  width: 100%;
   height: 100%;
+  width: 100%;
   margin: 1rem;
   background-color: #ddd;
   padding: 0.1rem;

@@ -1,13 +1,8 @@
 <template>
   <div class="category" :class="{blurCategory}" @dragover.prevent="dragOver()" @dragleave="dragLeave();" @drop="drop">
-    <h2 class="category-title">
-        <form v-if="enableTitleForm">
-          <input v-model="newCategoryName" type="text" ref="categoryTitleInput" :placeholder="name" />
-          <button type="submit" :disabled="newCategoryName == null || newCategoryName.length == 0" @click="tryToRenameCategory()">Change</button>
-          <a @click="stopRenamingCategory()" class="cancel-creation-link">Cancel</a>
-        </form>
-        <span v-else @click="renameCategory(id)" class="title-click" draggable="true" @dragstart="dragStart()" @dragend="dragEnd()">{{name}}</span>
-    </h2>
+    <div class="category-title" draggable="true" @dragstart="dragStart()" @dragend="dragEnd()">
+      <category-title :name="name" :id="id"></category-title>
+    </div>
     <div class="tasks">
       <div class="task" v-for="task in tasksFromCategorySorted(id)" :key="task.id">
         <task :task="task.description" :color="task.color" :id="task.id" :position="task.position" :categoryid="id"></task>
@@ -37,12 +32,14 @@ import {mapGetters, mapActions} from 'vuex';
 import Task from './Task.vue';
 import EmptyTask from './EmptyTask.vue';
 import TaskDropZone from './TaskDropZone.vue';
+import CategoryTitle from './CategoryTitle.vue';
 
 export default {
   components: {
     Task,
     EmptyTask,
-    TaskDropZone
+    TaskDropZone,
+    CategoryTitle
   },
   props: [
     'id',
@@ -53,9 +50,7 @@ export default {
     return {
       blurCategory: false,
       creatingNewTask: false,
-      taskName: null,
-      enableTitleForm: false,
-      newCategoryName: null
+      taskName: null
     }
   },
   methods: {
@@ -114,32 +109,10 @@ export default {
       this.createNewTask(newTask);
       this.stopTaskCreation();
     },
-    renameCategory(categoryid) {
-      this.startRenamingCategory({categoryid});
-      this.newCategoryName = this.name;
-      this.enableTitleForm = true;
-      this.$nextTick(function() {
-        this.$refs.categoryTitleInput.select();
-      });
-    },
-    stopRenamingCategory() {
-      this.enableTitleForm = false;
-      if(this.categoryBeingRenamed == this.id)
-        this.startRenamingCategory({null});
-    },
-    tryToRenameCategory() {
-      var categoryid = this.id;
-      var newname = this.newCategoryName;
-      this.changeCategoryTitle({categoryid, newname});
-      this.stopRenamingCategory();
-    },
     ...mapActions([
-      'startRenamingCategory',
       'changeCategoryPosition',
       'createNewTask',
       'startNewTaskProcess',
-      'startChangingCategoryTitle',
-      'changeCategoryTitle',
       'startDraggingCategory'
     ])
   },
@@ -149,8 +122,7 @@ export default {
       'categories',
       'taskBeingDragged',
       'categoryBeingDragged',
-      'newTaskProcessStartedForCategory',
-      'categoryBeingRenamed'
+      'newTaskProcessStartedForCategory'
     ])
   },
   watch: {
@@ -158,15 +130,7 @@ export default {
       if (newvalue != this.id) {
         this.stopTaskCreation();
       }
-    },
-    categoryBeingRenamed(newvalue) {
-      if (newvalue != this.id) {
-        this.stopRenamingCategory();
-      }
     }
-  },
-  created() {
-    this.newCategoryName = this.name;
   }
 }
 </script>
@@ -184,20 +148,7 @@ export default {
     padding: 0.2rem;
     margin: 0.2rem;
     background-color: white;
-
-    .title-click {
-      cursor: pointer;
-      margin: 0;
-      padding: 0;
-      width: 100%;
-      height: 100%;
-      display: block;
-    }
-  }
-
-  .delete-button {
-    float: right;
-    color: red;
+    cursor: grab;
   }
 
   .tasks {
